@@ -92,6 +92,14 @@ void SensorService::onFirstRef()
 
             mLastEventSeen.setCapacity(count);
             for (ssize_t i=0 ; i<count ; i++) {
+                // For OnePlus2, use AOSP based fusion sensor instead of
+                // hardware sensor for rotation vector
+                // FIXME: This behavior should kick in only for OnePlus2
+                // and we need to find an appropriate preprocessor macor
+                if (SENSOR_TYPE_ROTATION_VECTOR == list[i].type) {
+                    continue;
+                }
+
                 registerSensor( new HardwareSensor(list[i]) );
                 switch (list[i].type) {
                     case SENSOR_TYPE_ACCELEROMETER:
